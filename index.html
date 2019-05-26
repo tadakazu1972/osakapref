@@ -22,7 +22,7 @@ $(function() {
 	var font_size;
 	//PCの場合 (iPad:Width980)
 	if (width>600){
-		scale = 140000;
+		scale = 100000;
 		if (ua.indexOf('chrome') != -1){
 			mapx = 700;
 			mapy = 180;
@@ -39,7 +39,7 @@ $(function() {
 		font_size='10pt';
 	//Androidタブレット(Nexus7:Width600)
 	} else if (width<601 && width>420){
-		scale = 120000;
+		scale = 70000;
 		if (ua.indexOf('chrome') != -1){
 			mapx = width-(width/20);
 			mapy = height / 4;
@@ -56,7 +56,7 @@ $(function() {
 		font_size='10pt'
 	//スマホ(iphone5s:width 320, nexus6p:width412)の場合
 	} else {
-		scale = 70000;
+		scale = 5000;
 		mapx = width-(width/10);
 		mapy = height / 4;
 		label_font_size='16pt';
@@ -163,10 +163,7 @@ $(function() {
 </script>
 </head>
 <body>
-	<img src="baby.png" style="width:60px; height:64px">
-	<img src="logo.png">
 	<div id="map"></div>
-	<img src="kids.png" style="width:100px; height:79px">
 	<style>
         svg { background-color:#fff;}
         path { fill:white; stroke:black; stroke-width:0.25;}
