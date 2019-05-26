@@ -79,7 +79,7 @@ $(function() {
 			.attr('height', 550)
 			.append('g');
 	// 同じディレクトリにあるgeojsonファイルをhttp経由で読み込む
-	d3.json("ku.json", function(json) {
+	d3.json("osakapref.json", function(json) {
 			var projection,path;
 			//ツールチップを生成
 			var tooltip=d3.select("body")
@@ -163,7 +163,10 @@ $(function() {
 </script>
 </head>
 <body>
+	<img src="baby.png" style="width:60px; height:64px">
+	<img src="logo.png">
 	<div id="map"></div>
+	<img src="kids.png" style="width:100px; height:79px">
 	<style>
         svg { background-color:#fff;}
         path { fill:white; stroke:black; stroke-width:0.25;}
