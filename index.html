@@ -25,10 +25,10 @@ $(function() {
 		scale = 30000;
 		if (ua.indexOf('chrome') != -1){
 			mapx = 700;
-			mapy = 500;
+			mapy = 300;
 		} else if (ua.indexOf('safari') != -1){
 			mapx = 500;
-			mapy = 500;
+			mapy = 300;
 		} else {
 			//IE11(デスクトップのみ。Surfaceアプリは未対応)（FireFox,Opera他は未確認）
 			mapx = 300;
@@ -76,7 +76,7 @@ $(function() {
 	map = d3.select('#map')
 			.append('svg')
 			.attr('width', width)
-			.attr('height', 550)
+			.attr('height', height)
 			.append('g');
 	// 同じディレクトリにあるgeojsonファイルをhttp経由で読み込む
 	d3.json("osakapref.json", function(json) {
