@@ -7,8 +7,25 @@
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script type="text/javascript">
+//人口データ
+var pop_data = new Array();
+function loadPopData(){
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function(){
+        var tempArray = xhr.responseText.split("\n");
+        for (var i=0;i<tempArray.length;i++){
+            var strText = tempArray[i].split(",");
+            pop_data.push(strText);
+        }
+    };
+    xhr.open("get", "osaka201904suikei5sai.csv", true);
+    xhr.send(null);
+}
+loadPopData();
+
+//大阪府描画
 $(function() {
-    var g;
+  var g;
 	var width  = window.innerWidth;
 	var height = window.innerHeight;
 	var ua = window.navigator.userAgent.toLowerCase(); //ブラウザ判定
@@ -115,7 +132,7 @@ $(function() {
 				   // mouseoverの時のインタラクション
 				   d3.select(this).style("fill", "red");
 				   //ツールチップを表示
-				   var name=d.properties.N03_004;
+				   var name=d.properties.N03_004 + "人口 " + pop_data[d.properties.index][1];
 				   var label_x = String((width - label_width) / 2)+'px';
 				   tooltip.style("font-size", label_font_size)
 						  .style("left", label_x)
@@ -134,30 +151,6 @@ $(function() {
 					  window.location.href=d.properties.N03_001;
 				  }*/
 			   });
-	//区名表示ラベル追加
-	var xhr = new XMLHttpRequest();
-	xhr.onload = function(){
-		var tempArray = xhr.responseText.split("\n");
-		csvArray = new Array();
-		for(var i=0;i<tempArray.length;i++){
-			csvArray[i] = tempArray[i].split(",");
-			var data = csvArray[i];
-			var lonlat = [data[0], data[1]];
-			var xy = projection(lonlat);
-			//区名ラベル
-			map.append("text")
-			   .attr({
-			     x: xy[0]-20,
-				 y: xy[1],
-			    })
-			   .style("font-size", font_size)
-			   .style("font-weight", "bold")
-			   .style("font-family", "ヒラギノ角ゴ Pro W3, Hiragino Kaku Gothic Pro, Osaka, ＭＳ Ｐゴシック, MS PGothic, sans-serif")
-			   .text(data[2]);
-		}
-	};
-	xhr.open("get", "ku_center.csv", true);
-	xhr.send(null);
 	});
 });
 </script>
