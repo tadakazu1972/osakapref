@@ -8,6 +8,7 @@
 <script type="text/javascript">
 //人口データ
 var pop_data = new Array();
+var dataSet = []; //選択した市区町村のデータ描画のための配列
 function loadPopData(){
     var xhr = new XMLHttpRequest();
     xhr.onload = function(){
@@ -137,10 +138,12 @@ function drawOsaka(){
 						     .style("visibility", "visible")
 						     .text(name)
              //データ表示
-             var dataSet = []
              for (k=2; k<19;k++){
                 dataSet.push(pop_data[i][k])
              }
+             //まず消去
+             clearGraph();
+             //描画
              map.selectAll("rect")
                .data(dataSet)
                .enter()
@@ -169,6 +172,16 @@ function drawOsaka(){
 			   });
 	});
 }
+
+function clearGraph(){
+    map.selectAll("rect")
+       .data(dataSet)
+       .attr("width", function(d,i){
+           return d + "px";
+       })
+       //ここでheightをわざと設定しないから、グラフが描かれず、結果、消去したと同じ効果
+}
+
 </script>
 </head>
 <body onload="drawOsaka()">
