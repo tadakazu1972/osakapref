@@ -137,7 +137,10 @@ function drawOsaka(){
 						     .style("visibility", "visible")
 						     .text(name)
              //データ表示
-             var dataSet = [2000, 4000, 3000]
+             var dataSet = []
+             for (k=2; k<19;k++){
+                dataSet.push(pop_data[i][k])
+             }
              map.selectAll("rect")
                .data(dataSet)
                .enter()
