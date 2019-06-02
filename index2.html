@@ -7,7 +7,7 @@
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script type="text/javascript">
 //グローバル変数
-var graphY = 300;
+var graphY = 400;
 //人口データ
 var pop_data = new Array();
 function loadPopData(){
@@ -113,7 +113,8 @@ function drawOsaka(){
              barElements.enter()
                .append("rect")
                .style("stroke", "rgb(0,160,0)")
-               .style("fill", "rgb(0,255,0)")
+               .style("fill", "rgb(0,200,10)")
+               .style("fill-opacity", "0.6")
                .attr("x", 80)
                .attr("y", function(d,j){
                  return j * 12 + graphY;
