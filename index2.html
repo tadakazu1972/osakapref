@@ -155,13 +155,13 @@ function drawOsaka(){
                  return j * 12;
                })
                .attr("width", function(d,j){
-                 return (d / 100) + "px";
+                 return (d / 10) + "px";
                })
                .attr("height", "12px");
              //データの更新
              barElements
                .attr("width", function(d,j){
-                 return (d / 100) + "px";;
+                 return (d / 10) + "px";;
                })
 			   })
 			   .on('mouseout', function(d){
@@ -170,8 +170,8 @@ function drawOsaka(){
               //市区町村名　隠す
 					    tooltip.style("visibility", "hidden")
               //データ消去
-              dataSet = [];
-              clearGraph();
+              //dataSet = [];
+              //clearGraph();
 			   })
 			   .on('click', function(d) {
           // clickされた時のインタラクション
@@ -186,7 +186,7 @@ function clearGraph(){
     map.selectAll("rect")
        .data(dataSet)
        .attr("width", function(d,i){
-           return (d / 100) + "px";
+           return (d / 10) + "px";
        })
        //ここでheightをわざと設定しないから、グラフが描かれず、結果、消去したと同じ効果
 }
