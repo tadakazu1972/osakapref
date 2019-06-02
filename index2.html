@@ -137,8 +137,7 @@ function drawOsaka(){
 						     .style("top", "10px")
 						     .style("visibility", "visible")
 						     .text(name)
-             //データ読み込み　一旦クリア
-             dataSet = [];
+             //データ読み込み
              for (k=2; k<19;k++){
                 dataSet.push(pop_data[i][k])
              }
@@ -154,7 +153,7 @@ function drawOsaka(){
                  return j * 12;
                })
                .attr("width", function(d,j){
-                 return (d / 100) + "px";
+                 return (d / 10) + "px";
                })
                .attr("height", "12px");
 			   })
@@ -164,6 +163,7 @@ function drawOsaka(){
               //市区町村名　隠す
 					    tooltip.style("visibility", "hidden")
               //データ消去
+              dataSet = [];
               clearGraph();
 			   })
 			   .on('click', function(d) {
