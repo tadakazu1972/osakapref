@@ -139,8 +139,6 @@ function drawOsaka(){
 						     .text(name)
              //データ読み込み　一旦クリア
              dataSet = [];
-             clearGraph();
-             //データを格納
              for (k=2; k<19;k++){
                 dataSet.push(pop_data[i][k])
              }
@@ -161,9 +159,12 @@ function drawOsaka(){
                .attr("height", "12px");
 			   })
 			   .on('mouseout', function(d){
-					var color2=d.properties.N03_002;
-					d3.select(this).style("fill", color2);
-					tooltip.style("visibility", "hidden")
+              //白で塗り直し
+					    d3.select(this).style("fill", "white");
+              //市区町村名　隠す
+					    tooltip.style("visibility", "hidden")
+              //データ消去
+              clearGrapth();
 			   })
 			   .on('click', function(d) {
           // clickされた時のインタラクション
