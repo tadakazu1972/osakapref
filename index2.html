@@ -150,18 +150,18 @@ function drawOsaka(){
                .append("rect")
                .style("stroke", "rgb(160,0,0)")
                .style("fill", "rgb(255,0,0)")
-               .attr("x", 0)
+               .attr("x", 50)
                .attr("y", function(d,j){
-                 return j * 12;
+                 return j * 12 + 100;
                })
                .attr("width", function(d,j){
-                 return (d / 10) + "px";
+                 return (d / 20) + "px";
                })
                .attr("height", "12px");
              //データの更新
              barElements
                .attr("width", function(d,j){
-                 return (d / 10) + "px";;
+                 return (d / 20) + "px";;
                })
 			   })
 			   .on('mouseout', function(d){
@@ -169,28 +169,15 @@ function drawOsaka(){
 					    d3.select(this).style("fill", "white");
               //市区町村名　隠す
 					    tooltip.style("visibility", "hidden")
-              //データ消去
-              //dataSet = [];
-              //clearGraph();
 			   })
 			   .on('click', function(d) {
-          // clickされた時のインタラクション
-				  /*if(d.properties.N03_001!=""){
-					  window.location.href=d.properties.N03_001;
-				  }*/
+              // clickされた時のインタラクション
+				      /*if(d.properties.N03_001!=""){
+					      window.location.href=d.properties.N03_001;
+				      }*/
 			   });
 	});
 }
-
-function clearGraph(){
-    map.selectAll("rect")
-       .data(dataSet)
-       .attr("width", function(d,i){
-           return (d / 10) + "px";
-       })
-       //ここでheightをわざと設定しないから、グラフが描かれず、結果、消去したと同じ効果
-}
-
 </script>
 </head>
 <body onload="drawOsaka()">
