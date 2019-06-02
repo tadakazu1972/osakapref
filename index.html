@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script type="text/javascript">
+//グローバル変数
+var graphY = 400;
 //人口データ
 var pop_data = new Array();
 function loadPopData(){
@@ -30,65 +32,25 @@ function drawOsaka(){
 	var ua = window.navigator.userAgent.toLowerCase(); //ブラウザ判定
 	//scaleはスクリーンの大きさによって変更
 	var scale;
-	var mapx;
-	var mapy;
 	var label_font_size;
 	var label_width;
 	var label_height;
 	var font_size;
-	//PCの場合 (iPad:Width980)
-	if (width>600){
-		scale = 40000;
-		if (ua.indexOf('chrome') != -1){
-			mapx = 700;
-			mapy = 350;
-		} else if (ua.indexOf('safari') != -1){
-			mapx = 500;
-			mapy = 300;
-		} else {
-			//IE11(デスクトップのみ。Surfaceアプリは未対応)（FireFox,Opera他は未確認）
-			mapx = 300;
-			mapy = 0;
-		}
-		label_font_size='16pt';
+
+  //スマートフォンの時は変数調整
+	if ( width < 601) {
+    scale = 30000;
+    label_font_size='16pt';
+    label_width=40;
+    font_size='7pt'
+	} else {
+    scale = 40000;
+    label_font_size='16pt';
 		label_width=80;
 		font_size='10pt';
-	//Androidタブレット(Nexus7:Width600)
-	} else if (width<601 && width>420){
-		scale = 30000;
-		if (ua.indexOf('chrome') != -1){
-			mapx = width-(width/20);
-			mapy = height / 4;
-		} else if (ua.indexOf('safari') != -1){
-			mapx = 300;
-			mapy = 300;
-		} else {
-			//IE11（FireFox,Opera他は未確認）
-			mapx = 300;
-			mapy = 0;
-		}
-		label_font_size='16pt';
-		label_width=80;
-		font_size='10pt'
-	//スマホ(iphone5s:width 320, nexus6p:width412)の場合
-	} else {
-		scale = 30000;
-		mapx = width-(width/10);
-		mapy = height / 4;
-		label_font_size='16pt';
-		label_width=40;
-		font_size='7pt'
-	}
-	//取得したwidthを表示するラベル生成　テスト完了時に無効化
-	//var label=d3.select("body")
-	//			.append("div")
-	//			.attr("class", "tip")
-	//label.style("font-size", "16pt")
-	//	 .style("left", "30px")
-	//	 .style("top", "10px")
-	//	 .style("visibility", "visible")
-	//	 .text(width)
-	// svg要素を作成し、データの受け皿となるg要素を追加している
+  }
+
+  //マップ描画
 	map = d3.select('#map')
 			.append('svg')
 			.attr('width', width)
@@ -96,21 +58,16 @@ function drawOsaka(){
 			.append('g');
 	// 同じディレクトリにあるgeojsonファイルをhttp経由で読み込む
 	d3.json("osakapref_index.json", function(json) {
-			var projection,path;
-			//ツールチップを生成
-			var tooltip=d3.select("body")
+			var projection, path;
+			//市区町村表示領域を生成
+			var tooltip = d3.select("body")
 						  .append("div")
 						  .attr("class", "tip")
-			//画像を生成
-			var png1=d3.select("body")
-					   .append("div")
-					   .attr("class", "png")
-
 			// 投影を処理する関数を用意する。データからSVGのPATHに変換するため。
 			projection = d3.geo.mercator()
 						   .scale(scale)
 						   .center(d3.geo.centroid(json))  // データから中心点を計算 .center(d3.geo.centroid(json))
-						   .translate([mapx, mapy]);
+						   .translate([width/2, height/2]); //ブラウザの中央に転移
 			// pathジェネレータ関数
 			path = d3.geo.path().projection(projection);
 			// これがenterしたデータ毎に呼び出されpath要素のd属性にgeoJSONデータから変換した値を入れる
@@ -127,38 +84,91 @@ function drawOsaka(){
 					return "hsl(0,0%,80%)";
 			   })
 			   .attr("stroke","white" )
+         //マウスオーバー
 			   .on('mouseover', function(d){
-				   // mouseoverの時のインタラクション
-				   d3.select(this).style("fill", "red");
-				   //ツールチップを表示
-				   var name=d.properties.N03_004 + "人口 " + pop_data[d.properties.index][1];
-				   var label_x = String((width - label_width) / 2)+'px';
-				   tooltip.style("font-size", label_font_size)
-						  .style("left", label_x)
-						  .style("top", "10px")
-						  .style("visibility", "visible")
-						  .text(name)
+             //indexを保存
+             var i = d.properties.index;
+             var barElements; //描画する棒グラフの要素を格納する変数
+             //赤に塗る
+				     d3.select(this).style("fill", "red");
+				     //市区町村名を表示
+				     var name = d.properties.N03_004 + "  人口:" + pop_data[i][1];
+				     var label_x = String((width - label_width) / 2)+'px';
+				     tooltip.style("font-size", label_font_size)
+						     .style("left", label_x)
+						     .style("top", "10px")
+						     .style("visibility", "visible")
+						     .text(name)
+             //X軸ラベル描画
+             draw5sai();
+             //データ読み込み
+             var dataSet = [];
+             for (k=2; k<20;k++){
+                dataSet.push(pop_data[i][k])
+             }
+             //描画
+             barElements = map.selectAll("rect")
+               .data(dataSet)
+             //データの追加
+             barElements.enter()
+               .append("rect")
+               .style("stroke", "rgb(0,160,0)")
+               .style("fill", "rgb(0,200,10)")
+               .style("fill-opacity", "0.6")
+               .attr("x", 80)
+               .attr("y", function(d,j){
+                 return j * 12 + graphY;
+               })
+               .attr("width", function(d,j){
+                 return (d / 30) + "px";
+               })
+               .attr("height", "12px");
+             //データの更新
+             barElements
+               .attr("width", function(d,j){
+                 return (d / 30) + "px";;
+               })
 			   })
 			   .on('mouseout', function(d){
-					var color2=d.properties.N03_002;
-					d3.select(this).style("fill", color2);
-					tooltip.style("visibility", "hidden")
+              //白で塗り直し
+					    d3.select(this).style("fill", "white");
+              //市区町村名　隠す
+					    tooltip.style("visibility", "hidden")
 			   })
 			   .on('click', function(d) {
-          // clickされた時のインタラクション
-				  /*if(d.properties.N03_001!=""){
-					  window.location.href=d.properties.N03_001;
-				  }*/
+              // clickされた時のインタラクション
+				      /*if(d.properties.N03_001!=""){
+					      window.location.href=d.properties.N03_001;
+				      }*/
 			   });
 	});
 }
+
+//年齢区分　描画
+function draw5sai(){
+    var label5sai = ["０-４歳","５-９歳","10-14歳","15-19歳","20-24歳","25-29歳","30-34歳","35-39歳","40-44歳","45-49歳","50-54歳","55-59歳","60-64歳","65-69歳","70-74歳","75-79歳","80-84歳","85歳以上"];
+    map.selectAll("text.label")
+       .data(label5sai)
+       .enter()
+       .append("text")
+       .attr("class", "label")
+       .attr("x", 2)
+       .attr("y", function(d,i){
+           return i * 12 + graphY + 12;
+       })
+       .style("font-size", 10 + "px")
+       .text(function(d,i){
+           return d;
+       });
+}
+
 </script>
 </head>
 <body onload="drawOsaka()">
 	<div id="map"></div>
 	<style>
-        svg { background-color:#fff;}
-        path { fill:white; stroke:black; stroke-width:0.25;}
+    svg { background-color:#fff;}
+    path { fill:white; stroke:black; stroke-width:0.25;}
 		.tip {
 		  position:absolute;
 		  top:0px;
