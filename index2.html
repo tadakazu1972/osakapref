@@ -94,6 +94,11 @@ function drawOsaka(){
 			.attr('width', width)
 			.attr('height', height)
 			.append('g');
+  //棒グラフ表示領域を生成
+  var graph = d3.select("#graph")
+                .append("svg")
+                .attr("width", 300)
+                .attr("height", 200);
 	// 同じディレクトリにあるgeojsonファイルをhttp経由で読み込む
 	d3.json("osakapref_index.json", function(json) {
 			var projection,path;
@@ -101,12 +106,6 @@ function drawOsaka(){
 			var tooltip = d3.select("body")
 						  .append("div")
 						  .attr("class", "tip")
-      //棒グラフ表示領域を生成
-      var barGraph = d3.select("body")
-                       .append("svg")
-                       .attr("id", "barGraph")
-                       .attr("width", 300)
-                       .attr("height", 200);
 			// 投影を処理する関数を用意する。データからSVGのPATHに変換するため。
 			projection = d3.geo.mercator()
 						   .scale(scale)
@@ -144,7 +143,7 @@ function drawOsaka(){
 						     .text(name)
              //データ表示
              var dataSet = [2000, 4000, 3000]
-             barGraph.style("left", 0)
+             graph.style("left", 0)
                .style("top", "100px")
                .selectAll("rect")
                .data(dataSet)
@@ -178,9 +177,16 @@ function drawOsaka(){
 </head>
 <body onload="drawOsaka()">
 	<div id="map"></div>
+  <div id="graph"></div>
 	<style>
-        svg { background-color:#fff;}
-        path { fill:white; stroke:black; stroke-width:0.25;}
+    svg { background-color:#fff;}
+    path { fill:white; stroke:black; stroke-width:0.25;}
+    #map {
+      z-index:1;
+    }
+    #graph {
+      z-index:2;
+    }
 		.tip {
 		  position:absolute;
 		  top:0px;
