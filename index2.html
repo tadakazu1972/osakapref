@@ -151,9 +151,7 @@ function drawOsaka(){
                .attr("width", function(d,j){
                  return (d / 10) + "px";
                })
-               .attr("fill", function(d,j){
-                 return "rgb(0,255,0)";
-               })
+               .attr("height", "12px");
 			   })
 			   .on('mouseout', function(d){
 					var color2=d.properties.N03_002;
