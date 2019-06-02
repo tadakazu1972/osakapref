@@ -97,15 +97,16 @@ function drawOsaka(){
 	// 同じディレクトリにあるgeojsonファイルをhttp経由で読み込む
 	d3.json("osakapref_index.json", function(json) {
 			var projection,path;
-			//ツールチップを生成
-			var tooltip=d3.select("body")
+			//市区町村表示領域を生成
+			var tooltip = d3.select("body")
 						  .append("div")
 						  .attr("class", "tip")
-			//画像を生成
-			var png1=d3.select("body")
-					   .append("div")
-					   .attr("class", "png")
-
+      //棒グラフ表示領域を生成
+      var barGraph = d3.select("body")
+                       .append("svg")
+                       .attr("id", "barGraph")
+                       .attr("width", 300)
+                       .attr("height", 200);
 			// 投影を処理する関数を用意する。データからSVGのPATHに変換するため。
 			projection = d3.geo.mercator()
 						   .scale(scale)
@@ -143,8 +144,7 @@ function drawOsaka(){
 						     .text(name)
              //データ表示
              var dataSet = [2000, 4000, 3000]
-             d3.select("#barGraph")
-               .selectAll("rect")
+             barGrapth.selectAll("rect")
                .data(dataSet)
                .enter()
                .append("rect")
@@ -154,6 +154,9 @@ function drawOsaka(){
                })
                .attr("width", function(d,j){
                  return (d / 100) + "px";
+               })
+               .attr("fill", function(d,j){
+                 return "rgb(0,255,0)";
                })
 			   })
 			   .on('mouseout', function(d){
@@ -172,8 +175,7 @@ function drawOsaka(){
 </script>
 </head>
 <body onload="drawOsaka()">
-  <svg id="barGraph"></svg>
-	<div id="map"></div>  
+	<div id="map"></div>
 	<style>
         svg { background-color:#fff;}
         path { fill:white; stroke:black; stroke-width:0.25;}
