@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<meta http-equiv="content-language" content="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript">
+//人口データ
+var pop_data = new Array();
+function loadPopData(){
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function(){
+        var tempArray = xhr.responseText.split("\n");
+        for (var i=0;i<tempArray.length;i++){
+            var strText = tempArray[i].split(",");
+            pop_data.push(strText);
+        }
+    };
+    xhr.open("get", "osaka201904suikei5sai.csv", true);
+    xhr.send(null);
+}
+loadPopData();
+
+//大阪府描画
+function drawOsaka(){
+  var g;
+	var width  = window.innerWidth;
+	var height = window.innerHeight;
+	var ua = window.navigator.userAgent.toLowerCase(); //ブラウザ判定
+	//scaleはスクリーンの大きさによって変更
+	var scale;
+	var mapx;
+	var mapy;
+	var label_font_size;
+	var label_width;
+	var label_height;
+	var font_size;
+	//PCの場合 (iPad:Width980)
+	if (width>600){
+		scale = 40000;
+		if (ua.indexOf('chrome') != -1){
+			mapx = 700;
+			mapy = 350;
+		} else if (ua.indexOf('safari') != -1){
+			mapx = 500;
+			mapy = 300;
+		} else {
+			//IE11(デスクトップのみ。Surfaceアプリは未対応)（FireFox,Opera他は未確認）
+			mapx = 300;
+			mapy = 0;
+		}
+		label_font_size='16pt';
+		label_width=80;
+		font_size='10pt';
+	//Androidタブレット(Nexus7:Width600)
+	} else if (width<601 && width>420){
+		scale = 30000;
+		if (ua.indexOf('chrome') != -1){
+			mapx = width-(width/20);
+			mapy = height / 4;
+		} else if (ua.indexOf('safari') != -1){
+			mapx = 300;
+			mapy = 300;
+		} else {
+			//IE11（FireFox,Opera他は未確認）
+			mapx = 300;
+			mapy = 0;
+		}
+		label_font_size='16pt';
+		label_width=80;
+		font_size='10pt'
+	//スマホ(iphone5s:width 320, nexus6p:width412)の場合
+	} else {
+		scale = 30000;
+		mapx = width-(width/10);
+		mapy = height / 4;
+		label_font_size='16pt';
+		label_width=40;
+		font_size='7pt'
+	}
+	//取得したwidthを表示するラベル生成　テスト完了時に無効化
+	//var label=d3.select("body")
+	//			.append("div")
+	//			.attr("class", "tip")
+	//label.style("font-size", "16pt")
+	//	 .style("left", "30px")
+	//	 .style("top", "10px")
+	//	 .style("visibility", "visible")
+	//	 .text(width)
+	// svg要素を作成し、データの受け皿となるg要素を追加している
+	map = d3.select('#map')
+			.append('svg')
+			.attr('width', width)
+			.attr('height', height)
+			.append('g');
+	// 同じディレクトリにあるgeojsonファイルをhttp経由で読み込む
+	d3.json("osakapref_index.json", function(json) {
+			var projection,path;
+			//ツールチップを生成
+			var tooltip=d3.select("body")
+						  .append("div")
+						  .attr("class", "tip")
+			//画像を生成
+			var png1=d3.select("body")
+					   .append("div")
+					   .attr("class", "png")
+
+			// 投影を処理する関数を用意する。データからSVGのPATHに変換するため。
+			projection = d3.geo.mercator()
+						   .scale(scale)
+						   .center(d3.geo.centroid(json))  // データから中心点を計算 .center(d3.geo.centroid(json))
+						   .translate([mapx, mapy]);
+			// pathジェネレータ関数
+			path = d3.geo.path().projection(projection);
+			// これがenterしたデータ毎に呼び出されpath要素のd属性にgeoJSONデータから変換した値を入れる
+			map.selectAll('path')
+			   .data(json.features)
+			   .enter()
+			   .append('path')
+			   .attr('d', path)
+			   .style("fill", function(d){
+			           return d.properties.N03_002;
+			          })
+			   .attr("fill", function(d){
+			   // 適当に色を塗るなど
+					return "hsl(0,0%,80%)";
+			   })
+			   .attr("stroke","white" )
+         //マウスオーバー
+			   .on('mouseover', function(d){
+             //赤に塗る
+				     d3.select(this).style("fill", "red");
+				     //市区町村名を表示
+				     var name=d.properties.N03_004 + "人口 " + pop_data[d.properties.index][1];
+				     var label_x = String((width - label_width) / 2)+'px';
+				     tooltip.style("font-size", label_font_size)
+						     .style("left", label_x)
+						     .style("top", "10px")
+						     .style("visibility", "visible")
+						     .text(name)
+             //データ表示
+             d3.select("#barGraph")
+               .selectAll("rect")
+               .data(pop_data[d.properties.index])
+               .enter()
+               .append("rect")
+               .attr("x", 0)
+               .attr("y", function(d,i){
+                 return i * 12;
+               })
+               .attr("width", function(d,i){
+                 return d + "px";
+               })
+			   })
+			   .on('mouseout', function(d){
+					var color2=d.properties.N03_002;
+					d3.select(this).style("fill", color2);
+					tooltip.style("visibility", "hidden")
+			   })
+			   .on('click', function(d) {
+          // clickされた時のインタラクション
+				  /*if(d.properties.N03_001!=""){
+					  window.location.href=d.properties.N03_001;
+				  }*/
+			   });
+	});
+}
+</script>
+</head>
+<body onload="drawOsaka()">
+	<div id="map"></div>
+  <svg id="barGraph"></div>
+	<style>
+        svg { background-color:#fff;}
+        path { fill:white; stroke:black; stroke-width:0.25;}
+		.tip {
+		  position:absolute;
+		  top:0px;
+		  left:0px;
+		  z-index:9999;
+		  visibility:hidden;
+		  background-color:white;
+		  overflow:hidden;
+		  text-align:center;
+		  font-size:20pt;
+		  font-family:Tahoma,Optima,Helvetica;
+		  color:black;
+		 }
+		.png {
+		  position:absolute;
+		  top:0px;
+		  left:0px;
+		  z-index:9999;
+		  background-color:white;
+		  overflow:hidden;
+		 }
+		.pie { fill:orange; stroke:black; }
+	</style>
+</body>
