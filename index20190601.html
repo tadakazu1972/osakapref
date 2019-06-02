@@ -5,6 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
 <script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script type="text/javascript">
 //人口データ
 var pop_data = new Array();
@@ -23,7 +24,7 @@ function loadPopData(){
 loadPopData();
 
 //大阪府描画
-function drawOsaka(){
+$(function() {
   var g;
 	var width  = window.innerWidth;
 	var height = window.innerHeight;
@@ -151,10 +152,10 @@ function drawOsaka(){
 				  }*/
 			   });
 	});
-}
+});
 </script>
 </head>
-<body onload="drawOsaka()">
+<body>
 	<div id="map"></div>
 	<style>
         svg { background-color:#fff;}
