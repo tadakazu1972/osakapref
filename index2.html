@@ -137,7 +137,8 @@ function drawOsaka(){
 						     .style("top", "10px")
 						     .style("visibility", "visible")
 						     .text(name)
-             //データ表示
+             //データ読み込み　一旦クリア
+             dataSet = [];
              for (k=2; k<19;k++){
                 dataSet.push(pop_data[i][k])
              }
