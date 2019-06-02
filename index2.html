@@ -139,11 +139,11 @@ function drawOsaka(){
 						     .text(name)
              //データ読み込み　一旦クリア
              dataSet = [];
+             clearGraph();
+             //データを格納
              for (k=2; k<19;k++){
                 dataSet.push(pop_data[i][k])
              }
-             //まず消去
-             clearGraph();
              //描画
              map.selectAll("rect")
                .data(dataSet)
