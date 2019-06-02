@@ -137,6 +137,8 @@ function drawOsaka(){
 						     .style("top", "10px")
 						     .style("visibility", "visible")
 						     .text(name)
+             //X軸ラベル描画
+             draw5sai();
              //データ読み込み
              var dataSet = [];
              for (k=2; k<19;k++){
@@ -150,18 +152,18 @@ function drawOsaka(){
                .append("rect")
                .style("stroke", "rgb(160,0,0)")
                .style("fill", "rgb(255,0,0)")
-               .attr("x", 50)
+               .attr("x", 100)
                .attr("y", function(d,j){
                  return j * 12 + 100;
                })
                .attr("width", function(d,j){
-                 return (d / 20) + "px";
+                 return (d / 30) + "px";
                })
                .attr("height", "12px");
              //データの更新
              barElements
                .attr("width", function(d,j){
-                 return (d / 20) + "px";;
+                 return (d / 30) + "px";;
                })
 			   })
 			   .on('mouseout', function(d){
@@ -178,6 +180,25 @@ function drawOsaka(){
 			   });
 	});
 }
+
+//年齢区分　描画
+function draw5sai(){
+    var label5sai = ["０-４歳","５-９歳","10-14歳","15-19歳","20-24歳","25-29歳","30-34歳","35-39歳","40-44歳","45-49歳","50-54歳","55-59歳","60-64歳","65-69歳","70-74歳","75-79歳","80-84歳","85歳以上"];
+    map.selectAll("text.label")
+       .data(label5sai)
+       .enter()
+       .append("text")
+       .attr("class", "label")
+       .attr("x", 2)
+       .attr("y", function(d,i){
+           return i * 12;
+       })
+       .style("font-size", 8 + "px")
+       .text(function(d,i){
+           return d;
+       });
+}
+
 </script>
 </head>
 <body onload="drawOsaka()">
