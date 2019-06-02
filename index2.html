@@ -150,11 +150,11 @@ function drawOsaka(){
              //データの追加
              barElements.enter()
                .append("rect")
-               .style("stroke", "rgb(160,0,0)")
-               .style("fill", "rgb(255,0,0)")
-               .attr("x", 100)
+               .style("stroke", "rgb(0,160,0)")
+               .style("fill", "rgb(0,255,0)")
+               .attr("x", 80)
                .attr("y", function(d,j){
-                 return j * 12 + 100;
+                 return j * 12 + 200;
                })
                .attr("width", function(d,j){
                  return (d / 30) + "px";
@@ -191,9 +191,9 @@ function draw5sai(){
        .attr("class", "label")
        .attr("x", 2)
        .attr("y", function(d,i){
-           return i * 12;
+           return i * 12 + 200;
        })
-       .style("font-size", 8 + "px")
+       .style("font-size", 10 + "px")
        .text(function(d,i){
            return d;
        });
