@@ -142,7 +142,7 @@ function drawOsaka(){
 						     .style("visibility", "visible")
 						     .text(name)
              //データ表示
-             var dataSet = [pop_data[i][1], pop_data[i][2], pop_data[i][3]]
+             var dataSet = [2000, 4000, 3000]
              d3.select("#barGraph")
                .selectAll("rect")
                .data(dataSet)
@@ -153,7 +153,7 @@ function drawOsaka(){
                  return y * 12;
                })
                .attr("width", function(d,i){
-                 return (d / 1000) + "px";
+                 return (d / 100) + "px";
                })
 			   })
 			   .on('mouseout', function(d){
