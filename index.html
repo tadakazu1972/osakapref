@@ -6,9 +6,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script type="text/javascript">
-//ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
+//ƒOƒ[ƒoƒ‹•Ï”
 var graphY = 400;
-//äººå£ãƒ‡ãƒ¼ã‚¿
+//lŒûƒf[ƒ^
 var pop_data = new Array();
 function loadPopData(){
     var xhr = new XMLHttpRequest();
@@ -24,25 +24,26 @@ function loadPopData(){
 }
 loadPopData();
 
-//å¤§é˜ªåºœæç”»
+//‘åã•{•`‰æ
 function drawOsaka(){
   var g;
 	var width  = window.innerWidth;
 	var height = window.innerHeight;
-	var ua = window.navigator.userAgent.toLowerCase(); //ãƒ–ãƒ©ã‚¦ã‚¶åˆ¤å®š
-	//scaleã¯ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã®å¤§ãã•ã«ã‚ˆã£ã¦å¤‰æ›´
+	var ua = window.navigator.userAgent.toLowerCase(); //ƒuƒ‰ƒEƒU”»’è
+	//scale‚ÍƒXƒNƒŠ[ƒ“‚Ì‘å‚«‚³‚É‚æ‚Á‚Ä•ÏX
 	var scale;
 	var label_font_size;
 	var label_width;
 	var label_height;
 	var font_size;
 
-  //ã‚¹ãƒãƒ¼ãƒˆãƒ•ã‚©ãƒ³ã®æ™‚ã¯å¤‰æ•°èª¿æ•´
+  //ƒXƒ}[ƒgƒtƒHƒ“‚Ì‚Í•Ï”’²®
 	if ( width < 601) {
     scale = 30000;
     label_font_size='16pt';
     label_width=40;
     font_size='7pt'
+    graphY = height / 2;
 	} else {
     scale = 40000;
     label_font_size='16pt';
@@ -50,27 +51,27 @@ function drawOsaka(){
 		font_size='10pt';
   }
 
-  //ãƒãƒƒãƒ—æç”»
+  //ƒ}ƒbƒv•`‰æ
 	map = d3.select('#map')
 			.append('svg')
 			.attr('width', width)
 			.attr('height', height)
 			.append('g');
-	// åŒã˜ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã«ã‚ã‚‹geojsonãƒ•ã‚¡ã‚¤ãƒ«ã‚’httpçµŒç”±ã§èª­ã¿è¾¼ã‚€
+	// “¯‚¶ƒfƒBƒŒƒNƒgƒŠ‚É‚ ‚égeojsonƒtƒ@ƒCƒ‹‚ğhttpŒo—R‚Å“Ç‚İ‚Ş
 	d3.json("osakapref_index.json", function(json) {
 			var projection, path;
-			//å¸‚åŒºç”ºæ‘è¡¨ç¤ºé ˜åŸŸã‚’ç”Ÿæˆ
+			//s‹æ’¬‘º•\¦—Ìˆæ‚ğ¶¬
 			var tooltip = d3.select("body")
 						  .append("div")
 						  .attr("class", "tip")
-			// æŠ•å½±ã‚’å‡¦ç†ã™ã‚‹é–¢æ•°ã‚’ç”¨æ„ã™ã‚‹ã€‚ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰SVGã®PATHã«å¤‰æ›ã™ã‚‹ãŸã‚ã€‚
+			// “Š‰e‚ğˆ—‚·‚éŠÖ”‚ğ—pˆÓ‚·‚éBƒf[ƒ^‚©‚çSVG‚ÌPATH‚É•ÏŠ·‚·‚é‚½‚ßB
 			projection = d3.geo.mercator()
 						   .scale(scale)
-						   .center(d3.geo.centroid(json))  // ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ä¸­å¿ƒç‚¹ã‚’è¨ˆç®— .center(d3.geo.centroid(json))
-						   .translate([width/2, height/2]); //ãƒ–ãƒ©ã‚¦ã‚¶ã®ä¸­å¤®ã«è»¢ç§»
-			// pathã‚¸ã‚§ãƒãƒ¬ãƒ¼ã‚¿é–¢æ•°
+						   .center(d3.geo.centroid(json))  // ƒf[ƒ^‚©‚ç’†S“_‚ğŒvZ .center(d3.geo.centroid(json))
+						   .translate([width/2, height/2]); //ƒuƒ‰ƒEƒU‚Ì’†‰›‚É“]ˆÚ
+			// pathƒWƒFƒlƒŒ[ƒ^ŠÖ”
 			path = d3.geo.path().projection(projection);
-			// ã“ã‚ŒãŒenterã—ãŸãƒ‡ãƒ¼ã‚¿æ¯ã«å‘¼ã³å‡ºã•ã‚Œpathè¦ç´ ã®då±æ€§ã«geoJSONãƒ‡ãƒ¼ã‚¿ã‹ã‚‰å¤‰æ›ã—ãŸå€¤ã‚’å…¥ã‚Œã‚‹
+			// ‚±‚ê‚ªenter‚µ‚½ƒf[ƒ^–ˆ‚ÉŒÄ‚Ño‚³‚êpath—v‘f‚Ìd‘®«‚ÉgeoJSONƒf[ƒ^‚©‚ç•ÏŠ·‚µ‚½’l‚ğ“ü‚ê‚é
 			map.selectAll('path')
 			   .data(json.features)
 			   .enter()
@@ -80,36 +81,36 @@ function drawOsaka(){
 			           return d.properties.N03_002;
 			          })
 			   .attr("fill", function(d){
-			   // é©å½“ã«è‰²ã‚’å¡—ã‚‹ãªã©
+			   // “K“–‚ÉF‚ğ“h‚é‚È‚Ç
 					return "hsl(0,0%,80%)";
 			   })
 			   .attr("stroke","white" )
-         //ãƒã‚¦ã‚¹ã‚ªãƒ¼ãƒãƒ¼
+         //ƒ}ƒEƒXƒI[ƒo[
 			   .on('mouseover', function(d){
-             //indexã‚’ä¿å­˜
+             //index‚ğ•Û‘¶
              var i = d.properties.index;
-             var barElements; //æç”»ã™ã‚‹æ£’ã‚°ãƒ©ãƒ•ã®è¦ç´ ã‚’æ ¼ç´ã™ã‚‹å¤‰æ•°
-             //èµ¤ã«å¡—ã‚‹
+             var barElements; //•`‰æ‚·‚é–_ƒOƒ‰ƒt‚Ì—v‘f‚ğŠi”[‚·‚é•Ï”
+             //Ô‚É“h‚é
 				     d3.select(this).style("fill", "red");
-				     //å¸‚åŒºç”ºæ‘åã‚’è¡¨ç¤º
-				     var name = d.properties.N03_004 + "  äººå£:" + pop_data[i][1];
+				     //s‹æ’¬‘º–¼‚ğ•\¦
+				     var name = d.properties.N03_004 + "  lŒû:" + pop_data[i][1];
 				     var label_x = String((width - label_width) / 2)+'px';
 				     tooltip.style("font-size", label_font_size)
 						     .style("left", label_x)
 						     .style("top", "10px")
 						     .style("visibility", "visible")
 						     .text(name)
-             //Xè»¸ãƒ©ãƒ™ãƒ«æç”»
+             //X²ƒ‰ƒxƒ‹•`‰æ
              draw5sai();
-             //ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
+             //ƒf[ƒ^“Ç‚İ‚İ
              var dataSet = [];
              for (k=2; k<20;k++){
                 dataSet.push(pop_data[i][k])
              }
-             //æç”»
+             //•`‰æ
              barElements = map.selectAll("rect")
                .data(dataSet)
-             //ãƒ‡ãƒ¼ã‚¿ã®è¿½åŠ 
+             //ƒf[ƒ^‚Ì’Ç‰Á
              barElements.enter()
                .append("rect")
                .style("stroke", "rgb(0,160,0)")
@@ -123,20 +124,20 @@ function drawOsaka(){
                  return (d / 30) + "px";
                })
                .attr("height", "12px");
-             //ãƒ‡ãƒ¼ã‚¿ã®æ›´æ–°
+             //ƒf[ƒ^‚ÌXV
              barElements
                .attr("width", function(d,j){
                  return (d / 30) + "px";;
                })
 			   })
 			   .on('mouseout', function(d){
-              //ç™½ã§å¡—ã‚Šç›´ã—
+              //”’‚Å“h‚è’¼‚µ
 					    d3.select(this).style("fill", "white");
-              //å¸‚åŒºç”ºæ‘åã€€éš ã™
+              //s‹æ’¬‘º–¼@‰B‚·
 					    tooltip.style("visibility", "hidden")
 			   })
 			   .on('click', function(d) {
-              // clickã•ã‚ŒãŸæ™‚ã®ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ã‚·ãƒ§ãƒ³
+              // click‚³‚ê‚½‚ÌƒCƒ“ƒ^ƒ‰ƒNƒVƒ‡ƒ“
 				      /*if(d.properties.N03_001!=""){
 					      window.location.href=d.properties.N03_001;
 				      }*/
@@ -144,9 +145,9 @@ function drawOsaka(){
 	});
 }
 
-//å¹´é½¢åŒºåˆ†ã€€æç”»
+//”N—î‹æ•ª@•`‰æ
 function draw5sai(){
-    var label5sai = ["ï¼-ï¼”æ­³","ï¼•-ï¼™æ­³","10-14æ­³","15-19æ­³","20-24æ­³","25-29æ­³","30-34æ­³","35-39æ­³","40-44æ­³","45-49æ­³","50-54æ­³","55-59æ­³","60-64æ­³","65-69æ­³","70-74æ­³","75-79æ­³","80-84æ­³","85æ­³ä»¥ä¸Š"];
+    var label5sai = ["‚O-‚SÎ","‚T-‚XÎ","10-14Î","15-19Î","20-24Î","25-29Î","30-34Î","35-39Î","40-44Î","45-49Î","50-54Î","55-59Î","60-64Î","65-69Î","70-74Î","75-79Î","80-84Î","85ÎˆÈã"];
     map.selectAll("text.label")
        .data(label5sai)
        .enter()
