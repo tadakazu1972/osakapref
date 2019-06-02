@@ -144,7 +144,9 @@ function drawOsaka(){
 						     .text(name)
              //データ表示
              var dataSet = [2000, 4000, 3000]
-             barGrapth.selectAll("rect")
+             barGraph.style("left", 0)
+               .style("top", "100px")
+               .selectAll("rect")
                .data(dataSet)
                .enter()
                .append("rect")
