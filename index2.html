@@ -150,7 +150,7 @@ function drawOsaka(){
                .append("rect")
                .attr("x", 0)
                .attr("y", function(d,j){
-                 return y * 12;
+                 return j * 12;
                })
                .attr("width", function(d,j){
                  return (d / 100) + "px";
