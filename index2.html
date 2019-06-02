@@ -149,10 +149,10 @@ function drawOsaka(){
                .enter()
                .append("rect")
                .attr("x", 0)
-               .attr("y", function(d,y){
+               .attr("y", function(d,j){
                  return y * 12;
                })
-               .attr("width", function(d,i){
+               .attr("width", function(d,j){
                  return (d / 100) + "px";
                })
 			   })
