@@ -155,13 +155,13 @@ function drawOsaka(){
                  return j * 12;
                })
                .attr("width", function(d,j){
-                 return (d / 10) + "px";
+                 return (d / 100) + "px";
                })
                .attr("height", "12px");
              //データの更新
              barElements
                .attr("width", function(d,j){
-                 return d;
+                 return (d / 100) + "px";;
                })
 			   })
 			   .on('mouseout', function(d){
@@ -186,7 +186,7 @@ function clearGraph(){
     map.selectAll("rect")
        .data(dataSet)
        .attr("width", function(d,i){
-           return d + "px";
+           return (d / 100) + "px";
        })
        //ここでheightをわざと設定しないから、グラフが描かれず、結果、消去したと同じ効果
 }
