@@ -150,7 +150,7 @@ function drawOsaka(){
                  return i * 12;
                })
                .attr("width", function(d,i){
-                 return d + "px";
+                 return (d / 1000) + "px";
                })
 			   })
 			   .on('mouseout', function(d){
