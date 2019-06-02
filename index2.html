@@ -142,7 +142,7 @@ function drawOsaka(){
              //データ表示
              d3.select("#barGraph")
                .selectAll("rect")
-               .data(pop_data[d.properties.index])
+               .data(pop_data[d.properties.index][])
                .enter()
                .append("rect")
                .attr("x", 0)
