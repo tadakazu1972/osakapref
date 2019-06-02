@@ -36,6 +36,22 @@ function drawOsaka(){
 	var label_width;
 	var label_height;
 	var font_size;
+
+  //スマートフォンの時は変数調整
+	if ( width < 601) {
+    scale = 30000;
+    mapx = width-(width/10);
+    mapy = height / 4;
+    label_font_size='16pt';
+    label_width=40;
+    font_size='7pt'
+	} else {
+    scale = 40000;
+    label_font_size='16pt';
+		label_width=80;
+		font_size='10pt';
+  }
+  /*
 	//PCの場合 (iPad:Width980)
 	if (width>600){
 		scale = 40000;
@@ -78,17 +94,8 @@ function drawOsaka(){
 		label_font_size='16pt';
 		label_width=40;
 		font_size='7pt'
-	}
-	//取得したwidthを表示するラベル生成　テスト完了時に無効化
-	//var label=d3.select("body")
-	//			.append("div")
-	//			.attr("class", "tip")
-	//label.style("font-size", "16pt")
-	//	 .style("left", "30px")
-	//	 .style("top", "10px")
-	//	 .style("visibility", "visible")
-	//	 .text(width)
-	// svg要素を作成し、データの受け皿となるg要素を追加している
+	}*/
+
 	map = d3.select('#map')
 			.append('svg')
 			.attr('width', width)
@@ -96,7 +103,7 @@ function drawOsaka(){
 			.append('g');
 	// 同じディレクトリにあるgeojsonファイルをhttp経由で読み込む
 	d3.json("osakapref_index.json", function(json) {
-			var projection,path;
+			var projection, path;
 			//市区町村表示領域を生成
 			var tooltip = d3.select("body")
 						  .append("div")
@@ -105,7 +112,7 @@ function drawOsaka(){
 			projection = d3.geo.mercator()
 						   .scale(scale)
 						   .center(d3.geo.centroid(json))  // データから中心点を計算 .center(d3.geo.centroid(json))
-						   .translate([mapx, mapy]);
+						   .translate([width/2, height/2]); //ブラウザの中央に転移
 			// pathジェネレータ関数
 			path = d3.geo.path().projection(projection);
 			// これがenterしたデータ毎に呼び出されpath要素のd属性にgeoJSONデータから変換した値を入れる
