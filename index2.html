@@ -129,10 +129,12 @@ function drawOsaka(){
 			   .attr("stroke","white" )
          //マウスオーバー
 			   .on('mouseover', function(d){
+             //indexを保存
+             var i = d.properties.index;
              //赤に塗る
 				     d3.select(this).style("fill", "red");
 				     //市区町村名を表示
-				     var name=d.properties.N03_004 + "人口 " + pop_data[d.properties.index][1];
+				     var name = d.properties.N03_004 + "  人口:" + pop_data[i][1];
 				     var label_x = String((width - label_width) / 2)+'px';
 				     tooltip.style("font-size", label_font_size)
 						     .style("left", label_x)
@@ -140,14 +142,15 @@ function drawOsaka(){
 						     .style("visibility", "visible")
 						     .text(name)
              //データ表示
+             var dataSet = [pop_data[i][1], pop_data[i][2], pop_data[i][3]]
              d3.select("#barGraph")
                .selectAll("rect")
-               .data(pop_data[d.properties.index][])
+               .data(dataSet)
                .enter()
                .append("rect")
                .attr("x", 0)
-               .attr("y", function(d,i){
-                 return i * 12;
+               .attr("y", function(d,y){
+                 return y * 12;
                })
                .attr("width", function(d,i){
                  return (d / 1000) + "px";
