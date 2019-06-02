@@ -8,7 +8,6 @@
 <script type="text/javascript">
 //人口データ
 var pop_data = new Array();
-var dataSet = []; //選択した市区町村のデータ描画のための配列
 function loadPopData(){
     var xhr = new XMLHttpRequest();
     xhr.onload = function(){
@@ -127,6 +126,7 @@ function drawOsaka(){
 			   .on('mouseover', function(d){
              //indexを保存
              var i = d.properties.index;
+             var barElements; //描画する棒グラフの要素を格納する変数
              //赤に塗る
 				     d3.select(this).style("fill", "red");
 				     //市区町村名を表示
@@ -138,13 +138,15 @@ function drawOsaka(){
 						     .style("visibility", "visible")
 						     .text(name)
              //データ読み込み
+             var dataSet = [];
              for (k=2; k<19;k++){
                 dataSet.push(pop_data[i][k])
              }
              //描画
-             map.selectAll("rect")
+             barElements = map.selectAll("rect")
                .data(dataSet)
-               .enter()
+             //データの追加
+             barElements.enter()
                .append("rect")
                .style("stroke", "rgb(160,0,0)")
                .style("fill", "rgb(255,0,0)")
@@ -156,6 +158,11 @@ function drawOsaka(){
                  return (d / 10) + "px";
                })
                .attr("height", "12px");
+             //データの更新
+             barElements
+               .attr("width", function(d,j){
+                 return d;
+               })
 			   })
 			   .on('mouseout', function(d){
               //白で塗り直し
